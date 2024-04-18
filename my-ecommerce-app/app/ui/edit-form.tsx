@@ -303,6 +303,8 @@ export default function EditInvoiceForm({ id }: EditInvoiceFormProps) {
             {images.map((image, index) => (
               <div key={index}>
                 <Image
+                  width={96}
+                  height={96}
                   src={image}
                   alt={`Preview ${index}`}
                   className="w-[96px] h-[96px] object-contain rounded-lg"
