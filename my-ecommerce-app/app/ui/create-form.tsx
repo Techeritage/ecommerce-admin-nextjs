@@ -23,6 +23,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "../utils/firebase";
+import Image from "next/image";
 
 const storage = getStorage(app);
 
@@ -305,7 +306,7 @@ export default function Form() {
           {selectedFiles.map((file, index) => (
             <div key={index}>
               {images[index] ? (
-                <img
+                <Image
                   src={images[index]}
                   width={96}
                   height={96}

@@ -26,6 +26,7 @@ import {
 } from "firebase/storage";
 import { app } from "../utils/firebase";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const storage = getStorage(app);
 
@@ -301,7 +302,7 @@ export default function EditInvoiceForm({ id }: EditInvoiceFormProps) {
             />
             {images.map((image, index) => (
               <div key={index}>
-                <img
+                <Image
                   src={image}
                   alt={`Preview ${index}`}
                   className="w-[96px] h-[96px] object-contain rounded-lg"

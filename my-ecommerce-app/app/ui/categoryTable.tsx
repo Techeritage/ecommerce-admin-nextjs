@@ -21,7 +21,7 @@ export default function CategoryTable() {
 
   useEffect(() => {
     getCategoryFunc();
-  }, []);
+  });
 
   const getCategoryFunc = async () => {
     try {
@@ -71,11 +71,11 @@ export default function CategoryTable() {
                 type="submit"
                 className="w-full bg-red-500 text-white p-2 rounded-md hover:bg-red-400"
               >
-                Delete "
+                Delete &quot;
                 {categories.find(
                   (cat: { _id: string }) => cat._id === temporaryTag
                 )?.name || ""}
-                "
+                &quot;
               </button>
             </div>
             <div className="mb-2">

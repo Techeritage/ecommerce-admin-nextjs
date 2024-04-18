@@ -28,7 +28,7 @@ export default function EditCategoryForm({id}:{id:string}) {
   useEffect(() => {
     findCategory();
     handleParentCat();
-  }, []);
+  });
 
   //function for finding category with id
   async function findCategory() {

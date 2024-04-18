@@ -11,7 +11,7 @@ export default function EditTagForm({ id }: { id: string }) {
 
   useEffect(() => {
     getTagFunc();
-  }, []);
+  });
 
   const getTagFunc = async () => {
     try {

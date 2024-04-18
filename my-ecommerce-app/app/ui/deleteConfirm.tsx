@@ -14,7 +14,7 @@ const DeleteConfirm = ({ tagName }: { tagName: string }) => {
       </p>
       <div className="max-w-full mb-2">
         <button className="w-full bg-red-500 text-white p-2 rounded-md hover:bg-red-400">
-          Delete "{tagName}"
+          Delete &quot;{tagName}&quot;
         </button>
       </div>
       <div className="mb-2">

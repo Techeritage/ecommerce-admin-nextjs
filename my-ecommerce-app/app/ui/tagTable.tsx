@@ -21,7 +21,7 @@ export default function TagTable() {
 
   useEffect(() => {
     getTagFunc();
-  }, []);
+  });
 
   const getTagFunc = async () => {
     try {
@@ -69,10 +69,10 @@ export default function TagTable() {
                 type="submit"
                 className="w-full bg-red-500 text-white p-2 rounded-md hover:bg-red-400"
               >
-                Delete "
+                Delete &quot;
                 {tags.find((tag: { _id: string }) => tag._id === temporaryTag)
                   ?.name || ""}
-                "
+                &quot;
               </button>
             </div>
             <div className="mb-2">

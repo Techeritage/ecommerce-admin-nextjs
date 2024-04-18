@@ -81,8 +81,8 @@ export default function InvoicesTable({ query }: { query: string }) {
                 type="submit"
                 className="w-full bg-red-500 text-white p-2 rounded-md hover:bg-red-400"
               >
-                Delete "
-                {products.find((p) => p._id === temporaryTag)?.name || ""}"
+                Delete &quot;
+                {products.find((p) => p._id === temporaryTag)?.name || ""}&quot;
               </button>
             </div>
             <div className="mb-2">
