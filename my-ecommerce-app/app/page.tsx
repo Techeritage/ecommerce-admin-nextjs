@@ -1,14 +1,13 @@
-'use client';
-import { signIn } from "next-auth/react"
+import Link from "next/link";
 
 export default function Page() {
 
   return (
     <main className="flex min-h-screen flex-col p-6">
       <div>
-        <button className="border p-1" onClick={() => signIn('google')}>
+        <Link href='/dashboard'>
           Login as an Admin
-        </button>
+        </Link>
       </div>
     </main>
   )
