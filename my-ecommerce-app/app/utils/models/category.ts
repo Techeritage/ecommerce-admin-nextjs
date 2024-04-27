@@ -1,6 +1,23 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
-const categorySchema = new Schema(
+const parentCategorySchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    bgColor: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
+const SubcategorySchema = new Schema(
   {
     name: {
       type: String,
@@ -8,12 +25,11 @@ const categorySchema = new Schema(
     },
     parent: {
       type: mongoose.Types.ObjectId,
-      ref: "categories",
+      ref: "parentcategories",  
     },
-    properties: { type: [String], default: [] },
   },
   { timestamps: true }
 );
 
-export const Category =
-  models.categories || model("categories", categorySchema);
+export const ParentCategory = models.parentcategories || model("parentcategories", parentCategorySchema);
+export const SubCategory = models.subcategories || model("subcategories", SubcategorySchema);

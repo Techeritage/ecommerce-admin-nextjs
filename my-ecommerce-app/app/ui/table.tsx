@@ -23,6 +23,7 @@ export default function InvoicesTable({ query }: { query: string }) {
   const [products, setProducts] = useState<ProductData[]>([]);
   const [temporaryTag, setTemporaryTag] = useState("");
   const [deletePopup, setDeletePopup] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchData();
@@ -34,8 +35,12 @@ export default function InvoicesTable({ query }: { query: string }) {
         const res = await fetchProductByQuery(query); // Use specific fetch function for search
         setProducts(res.data);
       } else {
-        const data = await fetchProducts(); // Use specific fetch function for all products
-        setProducts(data.data);
+        const data = await fetchProducts();
+        if(data.status === 200) {
+          setProducts(data.data);
+          setLoading(false);
+        } 
+        
       }
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -133,7 +138,11 @@ export default function InvoicesTable({ query }: { query: string }) {
                   </div>
                 ))}
             </div>
-            {products.length > 0 ? (
+            {loading ? (
+              <div className="flex justify-center items-center h-40">
+                Loading...
+              </div>
+            ) : products.length > 0 ? (
               <table className="hidden min-w-full text-gray-900 md:table">
                 <thead className="rounded-lg text-left text-sm font-normal">
                   <tr>
@@ -176,7 +185,7 @@ export default function InvoicesTable({ query }: { query: string }) {
                 </tbody>
               </table>
             ) : (
-              <p>Loading products...</p>
+              <div className="flex justify-center items-center h-40">No Product found</div>
             )}
           </div>
         </div>

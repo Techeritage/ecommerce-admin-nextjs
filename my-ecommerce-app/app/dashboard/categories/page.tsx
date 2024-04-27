@@ -1,6 +1,6 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import CategoryForm from "@/app/ui/category-form";
-import CategoryTable from "@/app/ui/categoryTable";
+import ParentCategoryForm from "@/app/ui/parentCategoryForm";
+import ParentCategoryTable from "@/app/ui/parentCategoryTable";
 
 export default function CategoryPage() {
   return (
@@ -8,6 +8,7 @@ export default function CategoryPage() {
       <Breadcrumbs
         breadcrumbs={[
           { label: "Category", href: "/dashboard/categories", active: true },
+          { label: "Sub Category", href: "/dashboard/categories/subcategories" },
           {
             label: "Tag",
             href: `/dashboard/categories/tags`,
@@ -15,11 +16,12 @@ export default function CategoryPage() {
         ]}
       />
       <div>
-        <CategoryForm />
+        <ParentCategoryForm />
       </div>
       <div>
-        <CategoryTable />
+        <ParentCategoryTable />
       </div>
+
     </main>
   );
 }

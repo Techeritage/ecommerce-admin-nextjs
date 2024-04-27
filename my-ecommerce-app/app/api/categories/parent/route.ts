@@ -1,11 +1,12 @@
 import { connectToMongoDB } from "@/app/utils/config/mongodb";
-import { Tag } from "@/app/utils/models/tag";
-
+import { ParentCategory } from "@/app/utils/models/parentCategory";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
-interface TagData {
+interface ParentCategoryData {
   name: string;
+  image: string;
+  bgColor?: string;
 }
 
 async function connectToDb() {
@@ -17,24 +18,26 @@ async function connectToDb() {
 export async function POST(req: NextRequest) {
   try {
     await connectToDb();
+    const { name, image, bgColor }: ParentCategoryData = await req.json();
 
-    const { name }: TagData = await req.json();
-    const newTag = new Tag({
+    const newParentCategory = new ParentCategory({
       name,
+      image,
+      bgColor,
     });
-    await newTag.save();
+    await newParentCategory.save();
 
     return NextResponse.json({
       status: 200,
       success: true,
-      message: "Tag successfully created",
+      message: "parent category successfully created",
     });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({
       status: 500,
       success: false,
-      message: "Failed to create tag",
+      message: "Failed to create parent category",
       error: error.message,
     });
   }
@@ -47,22 +50,25 @@ export async function GET(req: NextRequest) {
     const id = searchParams.get("id");
 
     if (id) {
-      const oneTag = await Tag.findById({ _id: id });
-      if (!oneTag) {
-        return NextResponse.json({ message: "Tag not found" }, { status: 404 });
+      const oneParentCategory = await ParentCategory.findById({ _id: id });
+      if (!oneParentCategory) {
+        return NextResponse.json(
+          { message: "Parent Category not found" },
+          { status: 404 }
+        );
       }
 
       return NextResponse.json({
-        data: oneTag,
+        data: oneParentCategory,
         success: true,
         status: 200,
       });
     } else {
-      const allTags = await Tag.find();
+      const allParentCategories = await ParentCategory.find();
       return NextResponse.json({
         status: 200,
         success: true,
-        data: allTags,
+        data: allParentCategories,
       });
     }
   } catch (error: any) {
@@ -70,34 +76,37 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       status: 500,
       success: false,
-      message: "Failed to fetch product",
+      message: "Failed to get parent categories",
       error: error.message,
     });
   }
 }
 
-export async function PUT(
-  req: NextRequest
-) {
+export async function PUT(req: NextRequest) {
   try {
     await connectToDb();
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
+    const { name, bgColor, image }: ParentCategoryData = await req.json();
 
-    const { name }: TagData = await req.json();
-
-
-    const updatedTag = await Tag.findByIdAndUpdate(
+    const updatedParentCategory = await ParentCategory.findByIdAndUpdate(
       { _id: id },
-      { name }
+      { name, bgColor, image }
     );
-    if (!updatedTag) {
-      return NextResponse.json({ status: 404, error: "Tag not found" });
+    if (!updatedParentCategory) {
+      return NextResponse.json({
+        status: 404,
+        error: "Parent category not found",
+      });
     }
 
-    return NextResponse.json({ message: "done", status: 200, updatedTag });
+    return NextResponse.json({
+      message: "done",
+      status: 200,
+      updatedParentCategory,
+    });
   } catch (error) {
     console.error("Error processing PUT request:", error);
   }
@@ -110,22 +119,27 @@ export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    const deletedTag = await Tag.findByIdAndDelete({ _id: id });
-    if (!deletedTag) {
-      return NextResponse.json({ status: 404, message: "Tag not found" });
+    const deletedParentCategory = await ParentCategory.findByIdAndDelete({
+      _id: id,
+    });
+    if (!deletedParentCategory) {
+      return NextResponse.json({
+        status: 404,
+        message: "Parent Category not found",
+      });
     }
 
     return NextResponse.json({
       status: 200,
-      message: "Tag successfully deleted",
-      deletedTag,
+      message: "Category successfully deleted",
+      deletedParentCategory,
     });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({
       status: 500,
       success: false,
-      message: "Failed to delete tag",
+      message: "Failed to delete parent category",
       error: error.message,
     });
   }

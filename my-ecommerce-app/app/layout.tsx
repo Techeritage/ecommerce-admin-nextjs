@@ -3,6 +3,7 @@ import { inter } from "./ui/fonts";
 import "./globals.css";
 import { CategoryProvider } from "./providers/CategoryContext";
 import { TagProvider } from "./providers/TagContext";
+import { ParentCategoryProvider } from "./providers/ParentCategoryContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +19,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <CategoryProvider>
-          <TagProvider>{children}</TagProvider>
+          <TagProvider>
+            <ParentCategoryProvider>{children}</ParentCategoryProvider>
+          </TagProvider>
         </CategoryProvider>
       </body>
     </html>

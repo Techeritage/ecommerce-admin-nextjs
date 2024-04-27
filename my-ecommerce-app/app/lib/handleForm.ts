@@ -12,8 +12,7 @@ export const handleSubmit = async (data: {
   description: string;
   price: number | undefined;
   images: string[];
-  category: string;
-  properties: PropertiesData[];
+  subcategory: string;
   tag: string;
 }) => {
   try {
@@ -59,16 +58,16 @@ export const UpdateProduct = async ({
   price,
   images,
   id,
-  category,
-  properties,
+  subcategory,
+  tag,
 }: {
   name: string;
   description: string;
   price?: number | undefined;
   images: string[];
   id: string;
-  category: string;
-  properties: PropertiesData[];
+  subcategory: string;
+  tag: string;
 }) => {
   try {
     const res = await axios.put(`/api/products/${id}`, {
@@ -76,8 +75,8 @@ export const UpdateProduct = async ({
       price,
       description,
       images,
-      category,
-      properties,
+      subcategory,
+      tag,
     });
 
     return res;
@@ -98,19 +97,35 @@ export const deleteOneProduct = async (id: string) => {
 };
 
 /**********************CATEGORY************************* */
-export const createCategory = async ({
+export const createParentCategory = async ({
+  name,
+  image,
+  bgColor,
+}: {
+  name: string;
+  image: string;
+  bgColor: string;
+}) => {
+  try {
+    const data = { name, image, bgColor };
+
+    const res = await axios.post("/api/categories/parent", data);
+    return res;
+  } catch (error) {
+    console.error("Error creating parent category:", error);
+    throw error;
+  }
+};
+
+export const createSubcategory = async ({
   name,
   selectedParent,
-  properties,
 }: {
   name: string;
   selectedParent?: string;
-  properties?: string[];
 }) => {
   try {
-    const data = selectedParent
-      ? { name, selectedParent, properties }
-      : { name }; // Only include selectedParent if it's not null
+    const data = { name, selectedParent };
     const res = await axios.post("/api/categories", data);
     return res;
   } catch (error) {
@@ -119,7 +134,7 @@ export const createCategory = async ({
   }
 };
 
-export const getAllCategory = async () => {
+export const getAllSubcategory = async () => {
   try {
     const res = await axios.get("/api/categories");
     return res.data;
@@ -129,9 +144,29 @@ export const getAllCategory = async () => {
   }
 };
 
-export const deleteOneCategory = async (id: string) => {
+export const getAllParentCategory = async () => {
+  try {
+    const res = await axios.get("/api/categories/parent");
+    return res.data;
+  } catch (error) {
+    console.error("Error getting category:", error);
+    throw error;
+  }
+};
+
+export const deleteOneSubcategory = async (id: string) => {
   try {
     const res = await axios.delete(`/api/categories?id=${id}`);
+    return res;
+  } catch (error) {
+    console.error("Error deleting subategory:", error);
+    throw error;
+  }
+};
+
+export const deleteOneParentCategory = async (id: string) => {
+  try {
+    const res = await axios.delete(`/api/categories/parent?id=${id}`);
     return res;
   } catch (error) {
     console.error("Error deleting product:", error);
@@ -148,27 +183,60 @@ export const fetchOneCategory = async (id: string) => {
   }
 };
 
+export const fetchOneParentCategory = async (id: string) => {
+  try {
+    const res = await axios.get(`/api/categories/parent?id=${id}`);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching category:", error);
+  }
+};
+
 export const EditCategory = async ({
   name,
+  bgColor,
+  image,
+  id,
+}: {
+  name: string;
+  bgColor?: string;
+  image?: string;
+  id: string;
+}) => {
+  try {
+    const res = await axios.put(`/api/categories/parent?id=${id}`, {
+      name,
+      bgColor,
+      image,
+      id,
+    });
+
+    return res;
+  } catch (error) {
+    console.error("Error updating parent category:", error);
+    throw error;
+  }
+};
+
+export const EditSubcategory = async ({
+  name,
   selectedParent,
-  properties,
   id,
 }: {
   name: string;
   selectedParent?: string;
-  properties?: string[];
   id: string;
 }) => {
   try {
     const res = await axios.put(`/api/categories?id=${id}`, {
       name,
       selectedParent,
-      properties,
+      id,
     });
 
     return res;
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error("Error updating subcategory:", error);
     throw error;
   }
 };
@@ -224,4 +292,3 @@ export const deleteOneTag = async (id: string) => {
     throw error;
   }
 };
-

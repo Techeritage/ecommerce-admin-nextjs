@@ -6,6 +6,7 @@ import {
   CurrencyDollarIcon,
   FolderIcon,
   NewspaperIcon,
+  TagIcon,
   UserCircleIcon,
   WalletIcon,
 } from "@heroicons/react/24/outline";
@@ -14,8 +15,9 @@ import { Button } from "@/app/ui/button";
 import { useEffect, useState } from "react";
 import {
   UpdateProduct,
+  fetchAllTags,
   fetchOneProduct,
-  getAllCategory,
+  getAllSubcategory,
 } from "../lib/handleForm";
 import { Puff } from "react-loader-spinner";
 import {
@@ -52,12 +54,16 @@ interface ProductData {
 interface CategoryData {
   name: string;
   _id: string;
-  properties: string[];
 }
 
 interface PropertiesData {
   name: string;
   value: string;
+}
+
+interface TagData {
+  name: string;
+  _id: string;
 }
 
 export default function EditInvoiceForm({ id }: EditInvoiceFormProps) {
@@ -67,64 +73,46 @@ export default function EditInvoiceForm({ id }: EditInvoiceFormProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const [imageLoading, setImageLoading] = useState(false);
-  const [category, setCategory] = useState("");
-  const [displayCat, setDisplayCat] = useState<CategoryData[]>([]);
-  const [properties, setProperties] = useState<PropertiesData[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryData[]>([]);
+  const [subcategory, setSubcategory] = useState("");
+  const [allTags, setAllTags] = useState<TagData[]>([]);
+  const [tag, setTag] = useState("");
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetchOneProduct(id);
-        if (res.data) {
-          setName(res.data.name);
-          setDescription(res.data.description);
-          setPrice(res.data.price);
-          setImages(res.data.images);
-          setCategory(res.data?.category);
-          setProperties(res.data?.properties);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching product:", error);
-      }
-    };
+  async function handleParentCat() {
+    const res = await getAllSubcategory();
+    setSelectedCategory(res.data);
+  }
 
-    fetchData();
-    getCategoryFunc();
-  }, [id]);
+  async function handleTag() {
+    const res = await fetchAllTags();
+    setAllTags(res.data);
+  }
 
-  //function for all categories
-  const getCategoryFunc = async () => {
+  const fetchData = async () => {
     try {
-      const cat = await getAllCategory();
-      setDisplayCat(cat.data);
+      const res = await fetchOneProduct(id);
+      if (res.data) {
+        setName(res.data.name);
+        setDescription(res.data.description);
+        setPrice(res.data.price);
+        setImages(res.data.images);
+        setSubcategory(res.data?.subcategory);
+        setTag(res.data?.tag);
+        setLoading(false);
+      }
     } catch (error) {
-      console.error("Error getting products:", error);
+      console.error("Error fetching product:", error);
     }
   };
 
-  // Function to handle property change
-  const handlePropertyChange = (propName: string, value: string) => {
-    setProperties((prevProps) => {
-      const existingPropertyIndex = prevProps.findIndex(
-        (prop) => prop.name === propName
-      );
-      if (existingPropertyIndex !== -1) {
-        // Update existing property value
-        return [
-          ...prevProps.slice(0, existingPropertyIndex),
-          { name: propName, value },
-          ...prevProps.slice(existingPropertyIndex + 1),
-        ];
-      } else {
-        // Add new property-value pair
-        return [...prevProps, { name: propName, value }];
-      }
-    });
-  };
+  useEffect(() => {
+    fetchData();
+    handleParentCat();
+    handleTag();
+  }, [id]);
 
   //function for image
   const handleFileChange = async (
@@ -166,9 +154,9 @@ export default function EditInvoiceForm({ id }: EditInvoiceFormProps) {
       description,
       price,
       images,
+      subcategory,
+      tag,
       id,
-      category,
-      properties,
     });
     if (res.status === 200) {
       router.push("/dashboard/products");
@@ -200,63 +188,55 @@ export default function EditInvoiceForm({ id }: EditInvoiceFormProps) {
             </div>
           </div>
 
-          {/*Category */}
-          <div className="mb-4">
-            <label htmlFor="parent" className="mb-2 block text-sm font-medium">
-              Choose category
-            </label>
-            <div className="relative">
-              <select
-                id="parent"
-                name="parent"
-                value={category}
-                onChange={(ev) => setCategory(ev.target.value)}
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              >
-                <option value="">Uncategorized</option>
-                {displayCat.length > 0 &&
-                  displayCat.map((p: ProductData) => (
-                    <option key={p._id} value={p._id}>
-                      {p.name}
-                    </option>
-                  ))}
-              </select>
-              <FolderIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
+          {/********TAGS *************/}
+        <div className="mb-4">
+          <label htmlFor="tag" className="mb-2 block text-sm font-medium">
+            Choose tag
+          </label>
+          <div className="relative">
+            <select
+              id="tag"
+              name="tag"
+              value={tag}
+              onChange={(ev) => setTag(ev.target.value)}
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+            >
+              <option value="">untagged</option>
+              {allTags.length > 0 &&
+                allTags.map((p) => (
+                  <option key={p._id} value={p._id}>
+                    {p.name}
+                  </option>
+                ))}
+            </select>
+            <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           </div>
+        </div>
 
-          {/********PROPERTIES *************/}
-          <div className="mb-4">
-            {displayCat.length > 0 && (
-              <div>
-                <p className="mb-2 block text-sm font-medium">Properties:</p>
-                <div className="flex flex-wrap gap-2">
-                  {displayCat
-                    .find((cat) => cat._id === category)
-                    ?.properties.map((prop) => (
-                      <label
-                        key={prop}
-                        htmlFor={prop}
-                        className="text-sm font-normal"
-                      >
-                        {prop}:
-                        <input
-                          id={prop}
-                          type="text"
-                          className="peer block w-[100px] rounded-md border border-gray-200 p-2 text-sm outline-2 placeholder:text-gray-500"
-                          value={
-                            properties.find((p) => p.name === prop)?.value || ""
-                          }
-                          onChange={(e) =>
-                            handlePropertyChange(prop, e.target.value)
-                          }
-                        />
-                      </label>
-                    ))}
-                </div>
-              </div>
-            )}
+        {/*Category */}
+        <div className="mb-4">
+          <label htmlFor="parent" className="mb-2 block text-sm font-medium">
+            Choose Subcategory
+          </label>
+          <div className="relative">
+            <select
+              id="parent"
+              name="subcategory"
+              value={subcategory}
+              onChange={(ev) => setSubcategory(ev.target.value)}
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+            >
+              <option value="">uncategorized</option>
+              {selectedCategory && selectedCategory.length > 0 &&
+                selectedCategory.map((p: CategoryData) => (
+                  <option key={p._id} value={p._id}>
+                    {p.name}
+                  </option>
+                ))}
+            </select>
+            <FolderIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           </div>
+        </div>
 
           {/* Description */}
           <div className="mb-4">

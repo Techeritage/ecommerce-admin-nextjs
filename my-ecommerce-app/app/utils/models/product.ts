@@ -19,14 +19,10 @@ const productSchema = new Schema(
     images: {
       type: [String], // Array of strings representing image URLs
     },
-    category: {
+    subcategory: {
       type: mongoose.Types.ObjectId,
-      ref: "categories",
+      ref: "subcategories",
     },
-    properties: {
-      type: [Object],
-    },
-
     tag: {
       type: mongoose.Types.ObjectId,
       ref: "tags",

@@ -1,10 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import {
-  deleteOneCategory,
-  deleteOneProduct,
-  getAllCategory,
-} from "../lib/handleForm";
+import { deleteOneProduct } from "../lib/handleForm";
 import { useCategoryContext } from "../providers/CategoryContext";
 
 export function CreateInvoice() {
@@ -41,7 +37,18 @@ export function UpdateTag({ id }: { id: string }) {
   );
 }
 
-export function UpdateCategory({ id }: { id: string }) {
+export function UpdateSubcategory({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/dashboard/categories/subcategories/${id}/edit`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
+      <PencilIcon className="w-5" />
+    </Link>
+  );
+}
+
+export function UpdateParentCategory({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/categories/${id}/edit`}

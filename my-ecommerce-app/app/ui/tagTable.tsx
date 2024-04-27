@@ -21,7 +21,7 @@ export default function TagTable() {
 
   useEffect(() => {
     getTagFunc();
-  });
+  }, []);
 
   const getTagFunc = async () => {
     try {

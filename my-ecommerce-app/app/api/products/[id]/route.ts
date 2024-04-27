@@ -1,5 +1,6 @@
 import { connectToMongoDB } from "@/app/utils/config/mongodb";
 import Product from "@/app/utils/models/product";
+
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,8 +16,8 @@ interface ProductData {
   description: string;
   price: number;
   images: string[];
-  category: string;
-  properties: PropertiesData[];
+  subcategory: string;
+  tag: string;
 }
 
 async function connectToDb() {
@@ -60,11 +61,11 @@ export async function PUT(
 
     const { id } = params;
 
-    const { name, price, description, images, category, properties }: ProductData = await req.json();
+    const { name, price, description, images, subcategory, tag }: ProductData = await req.json();
 
     const updatedProduct = await Product.findByIdAndUpdate(
       { _id: id },
-      { name, description, images, price, category, properties }
+      { name, description, images, price, subcategory, tag }
     );
     if (!updatedProduct) {
       return NextResponse.json({ status: 404, error: "Product not found" });

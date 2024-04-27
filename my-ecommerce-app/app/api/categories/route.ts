@@ -1,13 +1,11 @@
 import { connectToMongoDB } from "@/app/utils/config/mongodb";
-import { Category } from "@/app/utils/models/category";
+import { SubCategory } from "@/app/utils/models/category";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 interface ProductData {
   name: string;
   selectedParent: string;
-  properties: string[];
-  //images: string[];
 }
 
 async function connectToDb() {
@@ -19,26 +17,25 @@ async function connectToDb() {
 export async function POST(req: NextRequest) {
   try {
     await connectToDb();
-    const { name, selectedParent, properties }: ProductData = await req.json();
+    const { name, selectedParent }: ProductData = await req.json();
 
-    const newCategory = new Category({
+    const newCategory = new SubCategory({
       name,
       parent: selectedParent,
-      properties,
     });
     await newCategory.save();
 
     return NextResponse.json({
       status: 200,
       success: true,
-      message: "category successfully created",
+      message: "Subcategory successfully created",
     });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({
       status: 500,
       success: false,
-      message: "Failed to create category",
+      message: "Failed to create subategory",
       error: error.message,
     });
   }
@@ -51,25 +48,25 @@ export async function GET(req: NextRequest) {
     const id = searchParams.get("id");
 
     if (id) {
-      const oneCategory = await Category.findById({ _id: id });
-      if (!oneCategory) {
+      const oneSubcategory = await SubCategory.findById({ _id: id });
+      if (!oneSubcategory) {
         return NextResponse.json(
-          { message: "Product not found" },
+          { message: "Subcategory not found" },
           { status: 404 }
         );
       }
 
       return NextResponse.json({
-        data: oneCategory,
+        data: oneSubcategory,
         success: true,
         status: 200,
       });
     } else {
-      const allCategories = await Category.find().populate("parent");
+      const allSubcategories = await SubCategory.find().populate('parent');
       return NextResponse.json({
         status: 200,
         success: true,
-        data: allCategories,
+        data: allSubcategories,
       });
     }
   } catch (error: any) {
@@ -77,34 +74,34 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       status: 500,
       success: false,
-      message: "Failed to get categories",
+      message: "Failed to get subcategories",
       error: error.message,
     });
   }
 }
 
-export async function PUT(
-  req: NextRequest
-) {
+export async function PUT(req: NextRequest) {
   try {
     await connectToDb();
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
+    const { name, selectedParent }: ProductData = await req.json();
 
-    const { name, selectedParent, properties }: ProductData = await req.json();
-
-
-    const updatedProduct = await Category.findByIdAndUpdate(
+    const updatedSubcategory = await SubCategory.findByIdAndUpdate(
       { _id: id },
-      { name, selectedParent, properties }
+      { name, parent: selectedParent }
     );
-    if (!updatedProduct) {
-      return NextResponse.json({ status: 404, error: "Product not found" });
+    if (!updatedSubcategory) {
+      return NextResponse.json({ status: 404, error: "Subcategory not found" });
     }
 
-    return NextResponse.json({ message: "done", status: 200, updatedProduct });
+    return NextResponse.json({
+      message: "done",
+      status: 200,
+      updatedSubcategory,
+    });
   } catch (error) {
     console.error("Error processing PUT request:", error);
   }
@@ -117,22 +114,25 @@ export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    const deletedProduct = await Category.findByIdAndDelete({ _id: id });
-    if (!deletedProduct) {
-      return NextResponse.json({ status: 404, message: "Category not found" });
+    const deletedSubcategory = await SubCategory.findByIdAndDelete({ _id: id });
+    if (!deletedSubcategory) {
+      return NextResponse.json({
+        status: 404,
+        message: "Subcategory not found",
+      });
     }
 
     return NextResponse.json({
       status: 200,
-      message: "Category successfully deleted",
-      deletedProduct,
+      message: "Subcategory successfully deleted",
+      deletedSubcategory,
     });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({
       status: 500,
       success: false,
-      message: "Failed to delete categories",
+      message: "Failed to delete subcategory",
       error: error.message,
     });
   }

@@ -15,8 +15,7 @@ interface ProductData {
   description: string;
   price: number;
   images: string[];
-  category: string;
-  properties: PropertiesData[];
+  subcategory: string;
   tag: string;
 }
 
@@ -38,8 +37,7 @@ export async function POST(req: NextRequest) {
       description,
       price,
       images,
-      category,
-      properties,
+      subcategory,
       tag,
     }: ProductData = await req.json();
 
@@ -49,8 +47,7 @@ export async function POST(req: NextRequest) {
       description,
       price,
       images,
-      category,
-      properties,
+      subcategory,
       tag,
     });
     await newProduct.save();

@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
 import { useEffect, useState } from "react";
-import { fetchAllTags, getAllCategory, handleSubmit } from "../lib/handleForm";
+import { fetchAllTags, getAllSubcategory, handleSubmit } from "../lib/handleForm";
 import { useRouter } from "next/navigation";
 import { Puff } from "react-loader-spinner";
 import {
@@ -32,15 +32,13 @@ interface ProductData {
   description: string;
   price: number;
   images: string[];
-  category: string;
-  properties: PropertiesData[];
+  subcategory: string;
   tag: string;
 }
 
 interface CategoryData {
   name: string;
   _id: string;
-  properties: string[];
 }
 
 interface TagData {
@@ -61,23 +59,16 @@ export default function Form() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryData[]>([]);
-  const [category, setCategory] = useState("");
-  const [properties, setProperties] = useState<PropertiesData[]>([]);
+  const [subcategory, setSubcategory] = useState("");
   const [allTags, setAllTags] = useState<TagData[]>([]);
   const [tag, setTag] = useState("");
 
   //router setup
   const router = useRouter();
 
-  //onload activity
-  useEffect(() => {
-    handleParentCat();
-    handleTag();
-  }, []);
-
-  //function for calling cateory and setting category
+    //function for calling cateory and setting category
   async function handleParentCat() {
-    const res = await getAllCategory();
+    const res = await getAllSubcategory();
     setSelectedCategory(res.data);
   }
 
@@ -86,25 +77,12 @@ export default function Form() {
     setAllTags(res.data);
   }
 
-  // Function to handle property change
-  const handlePropertyChange = (propName: string, value: string) => {
-    setProperties((prevProps) => {
-      const existingPropertyIndex = prevProps.findIndex(
-        (prop) => prop.name === propName
-      );
-      if (existingPropertyIndex !== -1) {
-        // Update existing property value
-        return [
-          ...prevProps.slice(0, existingPropertyIndex),
-          { name: propName, value },
-          ...prevProps.slice(existingPropertyIndex + 1),
-        ];
-      } else {
-        // Add new property-value pair
-        return [...prevProps, { name: propName, value }];
-      }
-    });
-  };
+  //onload activity
+  useEffect(() => {
+    handleParentCat();
+    handleTag();
+  }, []);
+  
 
   //image function
   const handleFileChange = async (
@@ -143,8 +121,7 @@ export default function Form() {
       description,
       price,
       images,
-      category,
-      properties,
+      subcategory,
       tag,
     };
     try {
@@ -159,7 +136,7 @@ export default function Form() {
       console.error("Error submitting product:", error);
       // Handle error
     }
-  };
+  }; 
 
   return (
     <form onSubmit={handleFormSubmit}>
@@ -194,7 +171,7 @@ export default function Form() {
           <div className="relative">
             <select
               id="tag"
-              name="parent"
+              name="tag"
               value={tag}
               onChange={(ev) => setTag(ev.target.value)}
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -214,18 +191,18 @@ export default function Form() {
         {/*Category */}
         <div className="mb-4">
           <label htmlFor="parent" className="mb-2 block text-sm font-medium">
-            Choose category
+            Choose Subcategory
           </label>
           <div className="relative">
             <select
               id="parent"
-              name="parent"
-              value={category}
-              onChange={(ev) => setCategory(ev.target.value)}
+              name="subcategory"
+              value={subcategory}
+              onChange={(ev) => setSubcategory(ev.target.value)}
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
             >
               <option value="">uncategorized</option>
-              {selectedCategory.length > 0 &&
+              {selectedCategory && selectedCategory.length > 0 &&
                 selectedCategory.map((p: CategoryData) => (
                   <option key={p._id} value={p._id}>
                     {p.name}
@@ -234,31 +211,6 @@ export default function Form() {
             </select>
             <FolderIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           </div>
-        </div>
-
-        {/********PROPERTIES *************/}
-        <div>
-          {selectedCategory.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {selectedCategory
-                .find((cat) => cat._id === category)
-                ?.properties.map((prop) => (
-                  <label key={prop} className="text-sm font-normal  mb-4">
-                    {prop}:
-                    <input
-                      type="text"
-                      className="peer block w-[100px] rounded-md border border-gray-200 p-2 text-sm outline-2 placeholder:text-gray-500"
-                      value={
-                        properties.find((p) => p.name === prop)?.value || ""
-                      }
-                      onChange={(e) =>
-                        handlePropertyChange(prop, e.target.value)
-                      }
-                    />
-                  </label>
-                ))}
-            </div>
-          )}
         </div>
 
         {/* Description */}

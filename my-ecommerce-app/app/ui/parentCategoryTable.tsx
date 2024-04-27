@@ -1,36 +1,43 @@
 "use client";
-import { useEffect, useState } from "react";
-import { UpdateCategory } from "./buttons";
-import { deleteOneCategory, getAllCategory } from "../lib/handleForm";
-import { useCategoryContext } from "../providers/CategoryContext";
 import {
   ExclamationTriangleIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import {
+  deleteOneParentCategory,
+  getAllParentCategory,
+} from "../lib/handleForm";
+import { UpdateParentCategory } from "./buttons";
+import { useParentCategoryContext } from "../providers/ParentCategoryContext";
 
 interface ProductData {
   _id: string;
   name: string;
-  parent: { name: string };
+  bgColor: string;
 }
 
-export default function CategoryTable() {
-  const { categories, setCategories } = useCategoryContext();
-  const [temporaryTag, setTemporaryTag] = useState("");
+export default function ParentCategoryTable() {
   const [deletePopup, setDeletePopup] = useState(false);
+  const [temporaryTag, setTemporaryTag] = useState("");
+  const { parentCategories, setParentCategories } = useParentCategoryContext();
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getCategoryFunc();
-  });
-
-  const getCategoryFunc = async () => {
+  const getParentCatFunc = async () => {
     try {
-      const cat = await getAllCategory();
-      setCategories(cat.data);
+      const cat = await getAllParentCategory();
+      if (cat.status === 200) {
+        setParentCategories(cat.data);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error getting products:", error);
     }
   };
+
+  useEffect(() => {
+    getParentCatFunc();
+  }, []);
 
   const deleteTag = (tag: string) => {
     setTemporaryTag(tag);
@@ -40,9 +47,9 @@ export default function CategoryTable() {
   const handleCategoryDelete = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await deleteOneCategory(temporaryTag);
+      const res = await deleteOneParentCategory(temporaryTag);
       if (res.status === 200) {
-        getCategoryFunc();
+        getParentCatFunc();
         setDeletePopup(false);
       } else {
         return;
@@ -72,7 +79,7 @@ export default function CategoryTable() {
                 className="w-full bg-red-500 text-white p-2 rounded-md hover:bg-red-400"
               >
                 Delete &quot;
-                {categories.find(
+                {parentCategories.find(
                   (cat: { _id: string }) => cat._id === temporaryTag
                 )?.name || ""}
                 &quot;
@@ -96,7 +103,11 @@ export default function CategoryTable() {
         <div className="inline-block min-w-full align-middle">
           <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
             <div className="md:hidden"></div>
-            {categories?.length > 0 ? (
+            {loading ? (
+              <div className="flex justify-center items-center h-40">
+                Loading...
+              </div>
+            ) : parentCategories?.length > 0 ? (
               <table className="hidden min-w-full text-gray-900 md:table">
                 <thead className="rounded-lg text-left text-sm font-normal">
                   <tr>
@@ -104,7 +115,7 @@ export default function CategoryTable() {
                       Category Name
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Parent Category
+                      Background Color
                     </th>
                     <th scope="col" className="relative py-3 pl-6 pr-3">
                       <span className="sr-only">Edit</span>
@@ -112,34 +123,35 @@ export default function CategoryTable() {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {categories.map((cat: ProductData) => (
-                    <tr
-                      key={cat._id}
-                      className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                    >
-                      <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                        <div className="flex items-center gap-3">
-                          <p>{cat.name}</p>
-                        </div>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-3">
-                        {cat.parent?.name}
-                      </td>
-                      <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                        <div className="flex justify-end gap-3">
-                          <UpdateCategory id={cat._id} />
-                          <button onClick={() => deleteTag(cat._id)}>
-                            <span className="sr-only">Delete</span>
-                            <TrashIcon className="w-5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {parentCategories &&
+                    parentCategories.map((cat: ProductData) => (
+                      <tr
+                        key={cat._id}
+                        className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                      >
+                        <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                          <div className="flex items-center gap-3">
+                            <p>{cat.name}</p>
+                          </div>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-3">
+                          {cat.bgColor}
+                        </td>
+                        <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                          <div className="flex justify-end gap-3">
+                            <UpdateParentCategory id={cat._id} />
+                            <button onClick={() => deleteTag(cat._id)}>
+                              <span className="sr-only">Delete</span>
+                              <TrashIcon className="w-5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             ) : (
-              <div>Loading categories...</div>
+              <div className="flex justify-center items-center h-40">No Subcategory found</div>
             )}
           </div>
         </div>
