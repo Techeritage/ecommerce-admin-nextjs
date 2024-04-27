@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "./button";
-import { UpdateTag, createTag, fetchOneTag } from "../lib/handleForm";
+import { UpdateTag, fetchOneTag } from "../lib/handleForm";
 import { useRouter } from "next/navigation";
 
 export default function EditTagForm({ id }: { id: string }) {

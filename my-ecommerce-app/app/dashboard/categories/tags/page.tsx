@@ -9,6 +9,7 @@ export default function TagPage() {
       <Breadcrumbs
         breadcrumbs={[
           { label: "Category", href: "/dashboard/categories" },
+          { label: "Sub Category", href: "/dashboard/categories/subcategories" },
           {
             label: "Tag",
             href: `/dashboard/categories/tags`,

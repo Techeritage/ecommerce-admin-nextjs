@@ -1,24 +1,13 @@
-import { connectToMongoDB } from "@/app/utils/config/mongodb";
+import { PostTagData } from "@/app/lib/definitions";
+import { connectToDb } from "@/app/utils/config/mongodb";
 import { Tag } from "@/app/utils/models/tag";
-
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-
-interface TagData {
-  name: string;
-}
-
-async function connectToDb() {
-  if (!mongoose.connection.readyState) {
-    await connectToMongoDB();
-  }
-}
 
 export async function POST(req: NextRequest) {
   try {
     await connectToDb();
 
-    const { name }: TagData = await req.json();
+    const { name }: PostTagData = await req.json();
     const newTag = new Tag({
       name,
     });
@@ -86,7 +75,7 @@ export async function PUT(
     const id = searchParams.get("id");
 
 
-    const { name }: TagData = await req.json();
+    const { name }: PostTagData = await req.json();
 
 
     const updatedTag = await Tag.findByIdAndUpdate(

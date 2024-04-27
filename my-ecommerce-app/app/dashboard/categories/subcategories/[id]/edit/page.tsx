@@ -1,9 +1,7 @@
 'use client';
 import Breadcrumbs from '@/app/ui/breadcrumbs';
-import EditCategoryForm from '@/app/ui/editCategoryForm';
 import EditSubcategoryForm from '@/app/ui/editSubcategoryForm';
 import { useParams } from 'next/navigation';
-import React from 'react'
 
 export default function SubcategoryEditPage() {
   const { id }: { id: string } = useParams();

@@ -8,14 +8,11 @@ import {
   ExclamationTriangleIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-
-interface tagData {
-  name: string;
-  _id: string;
-}
+import { TagData } from "../lib/definitions";
 
 export default function TagTable() {
   const { tags, setTags } = useTagContext();
+  const [loading, setLoading] = useState(true);
   const [temporaryTag, setTemporaryTag] = useState("");
   const [deletePopup, setDeletePopup] = useState(false);
 
@@ -26,7 +23,10 @@ export default function TagTable() {
   const getTagFunc = async () => {
     try {
       const tag = await fetchAllTags();
-      setTags(tag.data);
+      if (tag.status === 200) {
+        setTags(tag.data);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error getting products:", error);
     }
@@ -37,7 +37,7 @@ export default function TagTable() {
     setDeletePopup(true);
   };
 
-  const handleTagDelete = async (e : React.FormEvent<HTMLFormElement>) => {
+  const handleTagDelete = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await deleteOneTag(temporaryTag);
@@ -93,7 +93,11 @@ export default function TagTable() {
         <div className="inline-block min-w-full align-middle">
           <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
             <div className="md:hidden"></div>
-            {tags?.length > 0 ? (
+            {loading ? (
+              <div className="flex justify-center items-center h-40">
+                Loading...
+              </div>
+            ) : tags?.length > 0 ? (
               <table className="hidden min-w-full text-gray-900 md:table">
                 <thead className="rounded-lg text-left text-sm font-normal">
                   <tr>
@@ -106,7 +110,7 @@ export default function TagTable() {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {tags.map((tag: tagData) => (
+                  {tags.map((tag: TagData) => (
                     <tr
                       key={tag._id}
                       className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -130,7 +134,9 @@ export default function TagTable() {
                 </tbody>
               </table>
             ) : (
-              <div>Loading tags...</div>
+              <div className="flex justify-center items-center h-40">
+                No Tag found
+              </div>
             )}
           </div>
         </div>

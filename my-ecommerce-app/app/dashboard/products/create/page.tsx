@@ -1,6 +1,5 @@
 import Breadcrumbs from '@/app/ui/breadcrumbs';
 import Form from '@/app/ui/create-form';
-//import { fetchCustomers } from '@/app/lib/data';
  
 export default async function ProductCreatePage() {
   
@@ -16,7 +15,6 @@ export default async function ProductCreatePage() {
           },
         ]}
       />
-      {/*<Form customers={customers} />*/}
       <Form />
       
     </main>

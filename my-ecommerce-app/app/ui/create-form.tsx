@@ -1,10 +1,7 @@
 "use client";
 import Link from "next/link";
-
 import {
   ArrowUpTrayIcon,
-  CheckIcon,
-  ClockIcon,
   CurrencyDollarIcon,
   FolderIcon,
   NewspaperIcon,
@@ -24,32 +21,9 @@ import {
 } from "firebase/storage";
 import { app } from "../utils/firebase";
 import Image from "next/image";
+import { CategoryData, ProductData, TagData } from "../lib/definitions";
 
 const storage = getStorage(app);
-
-interface ProductData {
-  name: string;
-  description: string;
-  price: number;
-  images: string[];
-  subcategory: string;
-  tag: string;
-}
-
-interface CategoryData {
-  name: string;
-  _id: string;
-}
-
-interface TagData {
-  name: string;
-  _id: string;
-}
-
-interface PropertiesData {
-  name: string;
-  value: string;
-}
 
 export default function Form() {
   //state

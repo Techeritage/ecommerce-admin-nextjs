@@ -11,13 +11,7 @@ import {
   ExclamationTriangleIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-
-interface ProductData {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-}
+import { ProductData } from "../lib/definitions";
 
 export default function InvoicesTable({ query }: { query: string }) {
   const [products, setProducts] = useState<ProductData[]>([]);

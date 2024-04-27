@@ -7,12 +7,7 @@ import {
   ExclamationTriangleIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-
-interface ProductData {
-  _id: string;
-  name: string;
-  parent: { name: string };
-}
+import { subcategoryData } from "../lib/definitions";
 
 export default function SubcategoryTable() {
   const { categories, setCategories } = useCategoryContext();
@@ -27,8 +22,10 @@ export default function SubcategoryTable() {
   const getSubcategoryFunc = async () => {
     try {
       const cat = await getAllSubcategory();
-      setCategories(cat.data);
-      setLoading(false);
+      if (cat.status === 200) {
+        setCategories(cat.data);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error getting products:", error);
     }
@@ -119,7 +116,7 @@ export default function SubcategoryTable() {
                 </thead>
                 <tbody className="bg-white">
                   {categories &&
-                    categories.map((cat: ProductData) => (
+                    categories.map((cat: subcategoryData) => (
                       <tr
                         key={cat._id}
                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -146,7 +143,9 @@ export default function SubcategoryTable() {
                 </tbody>
               </table>
             ) : (
-              <div className="flex justify-center items-center h-40">No Subcategory found</div>
+              <div className="flex justify-center items-center h-40">
+                No Subcategory found
+              </div>
             )}
           </div>
         </div>

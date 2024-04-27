@@ -2,7 +2,6 @@
 import Breadcrumbs from '@/app/ui/breadcrumbs';
 import EditTagForm from '@/app/ui/editTagForm';
 import { useParams } from 'next/navigation';
-import React from 'react'
 
 export default function TagEditPage() {
   const { id }: { id: string } = useParams();

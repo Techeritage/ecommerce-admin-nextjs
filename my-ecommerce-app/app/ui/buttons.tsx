@@ -1,7 +1,5 @@
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { deleteOneProduct } from "../lib/handleForm";
-import { useCategoryContext } from "../providers/CategoryContext";
 
 export function CreateInvoice() {
   return (

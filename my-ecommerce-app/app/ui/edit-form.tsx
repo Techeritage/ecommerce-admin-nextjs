@@ -1,13 +1,10 @@
 "use client";
 import {
   ArrowUpTrayIcon,
-  CheckIcon,
-  ClockIcon,
   CurrencyDollarIcon,
   FolderIcon,
   NewspaperIcon,
   TagIcon,
-  UserCircleIcon,
   WalletIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -29,42 +26,9 @@ import {
 import { app } from "../utils/firebase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { CategoryData, EditInvoiceFormProps, TagData } from "../lib/definitions";
 
 const storage = getStorage(app);
-
-//id props type
-interface EditInvoiceFormProps {
-  id: string;
-}
-
-interface DisplayCategoryType {
-  _id: string;
-  parent: {
-    _id: string;
-  };
-  // Other properties...
-  properties: {}; // Adjust the type according to your structure
-}
-
-interface ProductData {
-  _id: string;
-  name: string;
-}
-
-interface CategoryData {
-  name: string;
-  _id: string;
-}
-
-interface PropertiesData {
-  name: string;
-  value: string;
-}
-
-interface TagData {
-  name: string;
-  _id: string;
-}
 
 export default function EditInvoiceForm({ id }: EditInvoiceFormProps) {
   const [name, setName] = useState(""); // Type annotation for name as string

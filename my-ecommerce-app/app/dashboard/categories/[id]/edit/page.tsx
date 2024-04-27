@@ -2,7 +2,6 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import EditCategoryForm from "@/app/ui/editCategoryForm";
 import { useParams } from "next/navigation";
-import React from "react";
 
 export default function CategoryEditPage() {
   const { id }: { id: string } = useParams();

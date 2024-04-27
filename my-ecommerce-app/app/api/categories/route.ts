@@ -1,23 +1,12 @@
-import { connectToMongoDB } from "@/app/utils/config/mongodb";
+import { PostProductData } from "@/app/lib/definitions";
+import { connectToDb } from "@/app/utils/config/mongodb";
 import { SubCategory } from "@/app/utils/models/category";
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-
-interface ProductData {
-  name: string;
-  selectedParent: string;
-}
-
-async function connectToDb() {
-  if (!mongoose.connection.readyState) {
-    await connectToMongoDB();
-  }
-}
 
 export async function POST(req: NextRequest) {
   try {
     await connectToDb();
-    const { name, selectedParent }: ProductData = await req.json();
+    const { name, selectedParent }: PostProductData = await req.json();
 
     const newCategory = new SubCategory({
       name,
@@ -87,7 +76,7 @@ export async function PUT(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    const { name, selectedParent }: ProductData = await req.json();
+    const { name, selectedParent }: PostProductData = await req.json();
 
     const updatedSubcategory = await SubCategory.findByIdAndUpdate(
       { _id: id },

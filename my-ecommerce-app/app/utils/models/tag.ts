@@ -1,6 +1,6 @@
-import { Schema, model, models } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const tagScchema = new Schema(
+const tagSchema = new Schema(
   {
     name: {
       type: String,
@@ -10,4 +10,4 @@ const tagScchema = new Schema(
   { timestamps: true }
 );
 
-export const Tag = models.tags || model("tags", tagScchema);
+export const Tag = mongoose.models.tags || mongoose.model("tags", tagSchema);

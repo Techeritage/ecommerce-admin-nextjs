@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, models } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const parentCategorySchema = new Schema(
   {
@@ -25,11 +25,15 @@ const SubcategorySchema = new Schema(
     },
     parent: {
       type: mongoose.Types.ObjectId,
-      ref: "parentcategories",  
+      ref: "parentcategories",
     },
   },
   { timestamps: true }
 );
 
-export const ParentCategory = models.parentcategories || model("parentcategories", parentCategorySchema);
-export const SubCategory = models.subcategories || model("subcategories", SubcategorySchema);
+export const ParentCategory =
+  mongoose.models.parentcategories ||
+  mongoose.model("parentcategories", parentCategorySchema);
+export const SubCategory =
+  mongoose.models.subcategories ||
+  mongoose.model("subcategories", SubcategorySchema);

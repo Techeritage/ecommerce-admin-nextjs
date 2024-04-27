@@ -9,11 +9,7 @@ import {
 import { useCategoryContext } from "../providers/CategoryContext";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { lusitana } from "./fonts";
-
-interface ProductData {
-  name: string;
-  _id: string;
-}
+import { ParentData } from "../lib/definitions";
 
 export default function SubCategoryForm() {
   //states
@@ -111,7 +107,7 @@ export default function SubCategoryForm() {
                   >
                     <option value="">Choose Parent Category</option>
                     {parentCat.length > 0 &&
-                      parentCat.map((p: ProductData) => (
+                      parentCat.map((p: ParentData) => (
                         <option key={p._id} value={p._id}>
                           {p.name}
                         </option>

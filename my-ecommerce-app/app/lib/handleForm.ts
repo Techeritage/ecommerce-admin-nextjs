@@ -1,11 +1,5 @@
 import axios from "axios";
 
-//property type
-interface PropertiesData {
-  name: string;
-  value: string;
-}
-
 /**********************PRODUCTS************************* */
 export const handleSubmit = async (data: {
   name: string;

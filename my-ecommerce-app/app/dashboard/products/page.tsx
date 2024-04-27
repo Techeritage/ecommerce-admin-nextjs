@@ -11,9 +11,7 @@ export default async function ProductPage({
     query?: string;
   };
 }) {
-  const query = searchParams?.query || "";
-
-  //const totalPages = await fetchInvoicesPages(query);
+  const query = searchParams?.query || ""
 
   return (
     <div className="w-full">

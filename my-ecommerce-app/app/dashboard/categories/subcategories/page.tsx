@@ -1,9 +1,6 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import ParentCategoryForm from "@/app/ui/parentCategoryForm";
-import ParentCategoryTable from "@/app/ui/parentCategoryTable";
 import SubCategoryForm from "@/app/ui/subcategory-form";
 import SubcategoryTable from "@/app/ui/subcategoryTable";
-import React from "react";
 
 export default function SubCategoryPage() {
   return (

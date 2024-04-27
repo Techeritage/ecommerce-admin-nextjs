@@ -6,7 +6,7 @@ import { useTagContext } from "../providers/TagContext";
 
 export default function TagForm() {
   const [name, setName] = useState("");
-  const { tags, setTags } = useTagContext();
+  const { setTags } = useTagContext();
 
   const getCategoryFunc = async () => {
     try {
@@ -18,12 +18,12 @@ export default function TagForm() {
   };
 
   //onsubmit function
-  const handleTagSubmit = async(ev: React.FormEvent<HTMLFormElement>) => {
+  const handleTagSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     try {
       const res = await createTag(name);
       if (res.status === 200) {
-        setName('');
+        setName("");
         getCategoryFunc();
       } else {
         return;

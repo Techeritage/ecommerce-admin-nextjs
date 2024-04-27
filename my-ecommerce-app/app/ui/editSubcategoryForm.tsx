@@ -2,18 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { lusitana } from "./fonts";
 import { Button } from "./button";
-import { useCategoryContext } from "../providers/CategoryContext";
 import {
   EditSubcategory,
   fetchOneCategory,
   getAllParentCategory,
 } from "../lib/handleForm";
 import { useRouter } from "next/navigation";
+import { ParentData } from "../lib/definitions";
 
-interface ProductData {
-  name: string;
-  _id: string;
-}
 
 export default function EditSubcategoryForm({ id }: { id: string }) {
   //states
@@ -21,7 +17,6 @@ export default function EditSubcategoryForm({ id }: { id: string }) {
   const [selectedParent, setSelectedParent] = useState<string | undefined>(
     undefined
   );
-  const { setCategories } = useCategoryContext();
   const [parentCat, setParentCat] = useState([]);
   const [ready, setReady] = useState(false);
 
@@ -114,7 +109,7 @@ export default function EditSubcategoryForm({ id }: { id: string }) {
                   >
                     <option value="">Choose Parent Category</option>
                     {parentCat.length > 0 &&
-                      parentCat.map((p: ProductData) => (
+                      parentCat.map((p: ParentData) => (
                         <option key={p._id} value={p._id}>
                           {p.name}
                         </option>

@@ -10,12 +10,7 @@ import {
 } from "../lib/handleForm";
 import { UpdateParentCategory } from "./buttons";
 import { useParentCategoryContext } from "../providers/ParentCategoryContext";
-
-interface ProductData {
-  _id: string;
-  name: string;
-  bgColor: string;
-}
+import { ParentData } from "../lib/definitions";
 
 export default function ParentCategoryTable() {
   const [deletePopup, setDeletePopup] = useState(false);
@@ -124,7 +119,7 @@ export default function ParentCategoryTable() {
                 </thead>
                 <tbody className="bg-white">
                   {parentCategories &&
-                    parentCategories.map((cat: ProductData) => (
+                    parentCategories.map((cat: ParentData) => (
                       <tr
                         key={cat._id}
                         className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

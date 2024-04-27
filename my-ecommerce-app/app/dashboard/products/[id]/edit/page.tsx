@@ -1,7 +1,6 @@
 "use client";
 import Form from "@/app/ui/edit-form";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { fetchOneProduct } from "@/app/lib/handleForm";
 import { useParams } from "next/navigation";
 import NotFound from "./not-found";
 import { Suspense } from "react";

@@ -1,30 +1,7 @@
-import { connectToMongoDB } from "@/app/utils/config/mongodb";
+import { ProductData } from "@/app/lib/definitions";
+import { connectToDb } from "@/app/utils/config/mongodb";
 import Product from "@/app/utils/models/product";
-
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-
-//property type
-interface PropertiesData {
-  name: string;
-  value: string;
-}
-
-//data type
-interface ProductData {
-  name: string;
-  description: string;
-  price: number;
-  images: string[];
-  subcategory: string;
-  tag: string;
-}
-
-async function connectToDb() {
-  if (!mongoose.connection.readyState) {
-    await connectToMongoDB();
-  }
-}
 
 export async function GET(
   req: NextRequest,

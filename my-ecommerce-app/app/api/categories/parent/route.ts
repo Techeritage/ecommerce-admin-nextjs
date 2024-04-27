@@ -1,24 +1,12 @@
-import { connectToMongoDB } from "@/app/utils/config/mongodb";
+import { PostParentCategoryData } from "@/app/lib/definitions";
+import { connectToDb } from "@/app/utils/config/mongodb";
 import { ParentCategory } from "@/app/utils/models/parentCategory";
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-
-interface ParentCategoryData {
-  name: string;
-  image: string;
-  bgColor?: string;
-}
-
-async function connectToDb() {
-  if (!mongoose.connection.readyState) {
-    await connectToMongoDB();
-  }
-}
 
 export async function POST(req: NextRequest) {
   try {
     await connectToDb();
-    const { name, image, bgColor }: ParentCategoryData = await req.json();
+    const { name, image, bgColor }: PostParentCategoryData = await req.json();
 
     const newParentCategory = new ParentCategory({
       name,
@@ -89,7 +77,7 @@ export async function PUT(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    const { name, bgColor, image }: ParentCategoryData = await req.json();
+    const { name, bgColor, image }: PostParentCategoryData = await req.json();
 
     const updatedParentCategory = await ParentCategory.findByIdAndUpdate(
       { _id: id },
